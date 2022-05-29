@@ -19,21 +19,9 @@ player.on('timeupdate', throttle(onPlay, 1000));
 
 // setCurrentTime(seconds: number): Promise<number, (RangeError|Error)>
 
-player.setCurrentTime(timeToStart).then(function(seconds) {
-    // seconds = the actual time that the player seeked to
-}).catch(function(error) {
-    switch (error.name) {
-        case 'RangeError':
-            console.log('the time was less than 0 or greater than the video’s duration');
-            // the time was less than 0 or greater than the video’s duration
-            break;
-
-        default:
-            // some other error occurred
-            console.log(error.name);
-            break;
-    }
-});
+if (timeToStart) {
+    player.setCurrentTime(timeToStart);
+}
 
 
 // on(event: string, callback: function): void
