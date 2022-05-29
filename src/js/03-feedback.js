@@ -10,55 +10,49 @@ const refs = {
 
 
 refs.form.addEventListener('submit', onFormSubmit);
-refs.input.addEventListener('input', throttle(onInputChange, 500));
-refs.textarea.addEventListener('input', throttle(onTextareaChange, 500));
+refs.form.addEventListener('input', throttle(onInputChange, 500))
 
 let formData;
 
-//якщо є дані в localStorage, підставити їх в поля форми
-takeDataFromLocalStorage();
+initFeedbackPage();
 
-function takeDataFromLocalStorage() {    
-    console.log(localStorage.getItem(KEY_TO_LOCALSTORAGE));
-    if (!localStorage.getItem(KEY_TO_LOCALSTORAGE)) {
-         formData = {};
-        console.log(formData);
+
+function initFeedbackPage() {
+    const savedData = localStorage.getItem(KEY_TO_LOCALSTORAGE);    
+
+    if (savedData) {        
+        const parsedSavedData = JSON.parse(savedData);       
+
+        refs.input.value = parsedSavedData.email;
+        refs.textarea.value = parsedSavedData.message;        
     } else {
-        formData = JSON.parse(localStorage.getItem(KEY_TO_LOCALSTORAGE));
-        refs.form.email.value = formData.email;
-        refs.form.message.value = formData.message;
-    };
+        formData = {};
+        refs.input.value = "";
+        refs.textarea.value = "";
+    }
+
 }
 
-//внести зміни в поля форми і зберегти їх
-function onInputChange(event) {
-    console.log(event.target.value);   
-    formData.email = event.target.value;
-//    console.log(formData);
-    localStorage.setItem(KEY_TO_LOCALSTORAGE, JSON.stringify(formData));    
-}
-
-function onTextareaChange(event) {
-    console.log(event.target.value);
-    formData.message = event.target.value;
-    // console.log(formData);
-    localStorage.setItem(KEY_TO_LOCALSTORAGE, JSON.stringify(formData));
-}
-
-
-//внесені зміни відправити в localStorage i очистити форму
 
 function onFormSubmit(event) {
-    event.preventDefault();   
+    event.preventDefault();
 
-    if (formData.email === '' || formData.message === '') {
-      alert('Please, fill in all the fields!');
-      return;
+    if (refs.input.value === "" || refs.textarea.value==="") {
+        alert('Please fill in all fields!');
+        return;
     };
 
-localStorage.setItem(KEY_TO_LOCALSTORAGE, JSON.stringify(formData));
-    refs.form.reset();
+
+   
     localStorage.removeItem(KEY_TO_LOCALSTORAGE);
+    refs.form.reset();    
 }
 
+function onInputChange(event) {
+    
+        formData[event.target.name] = event.target.value;
 
+        localStorage.setItem(KEY_TO_LOCALSTORAGE, JSON.stringify(formData));  
+        console.log(formData);
+        console.log(localStorage.getItem(KEY_TO_LOCALSTORAGE));
+}
