@@ -23,8 +23,8 @@ function initFeedbackPage() {
     if (savedData) {        
         const parsedSavedData = JSON.parse(savedData);       
 
-        refs.input.value = parsedSavedData.email;
-        refs.textarea.value = parsedSavedData.message;        
+        refs.input.value = parsedSavedData.email || "";
+        refs.textarea.value = parsedSavedData.message || "";        
     } else {
         formData = {};
         refs.input.value = "";
@@ -53,6 +53,6 @@ function onInputChange(event) {
         formData[event.target.name] = event.target.value;
 
         localStorage.setItem(KEY_TO_LOCALSTORAGE, JSON.stringify(formData));  
-        console.log(formData);
-        console.log(localStorage.getItem(KEY_TO_LOCALSTORAGE));
+        // console.log(formData);
+        // console.log(localStorage.getItem(KEY_TO_LOCALSTORAGE));
 }
