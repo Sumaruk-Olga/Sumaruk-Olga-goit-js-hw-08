@@ -8,29 +8,28 @@ const refs = {
     textarea: document.querySelector('textarea'),
 };
 
+initFeedbackPage();
 
 refs.form.addEventListener('submit', onFormSubmit);
 refs.form.addEventListener('input', throttle(onInputChange, 500))
 
-let formData;
-
-initFeedbackPage();
 
 
 function initFeedbackPage() {
-    const savedData = localStorage.getItem(KEY_TO_LOCALSTORAGE);    
-
-    if (savedData) {        
-        const parsedSavedData = JSON.parse(savedData);       
-
+    const savedData = localStorage.getItem(KEY_TO_LOCALSTORAGE);
+    let parsedSavedData;
+    console.log('savedData', savedData);
+    if (savedData) {
+        parsedSavedData = JSON.parse(savedData);
+        
+        console.log('parsedSavedData.email', parsedSavedData.email);
+        console.log('parsedSavedData.message', parsedSavedData.message);
         refs.input.value = parsedSavedData.email || "";
-        refs.textarea.value = parsedSavedData.message || "";        
+        refs.textarea.value = parsedSavedData.message || "";
     } else {
-        formData = {};
-        refs.input.value = "";
-        refs.textarea.value = "";
+        parsedSavedData = {};
     }
-
+    console.log('parsedSavedData', parsedSavedData);
 }
 
 
@@ -49,10 +48,20 @@ function onFormSubmit(event) {
 }
 
 function onInputChange(event) {
+        const savedData = localStorage.getItem(KEY_TO_LOCALSTORAGE);
+    let parsedSavedData;
+    console.log('savedData', savedData);
+    if (savedData) {
+        parsedSavedData = JSON.parse(savedData);
+        
+    } else {
+        parsedSavedData = {};
+    }
     
-        formData[event.target.name] = event.target.value;
+    parsedSavedData[event.target.name] = event.target.value;
 
-        localStorage.setItem(KEY_TO_LOCALSTORAGE, JSON.stringify(formData));  
-        // console.log(formData);
-        // console.log(localStorage.getItem(KEY_TO_LOCALSTORAGE));
+        refs.input.value = parsedSavedData.email || "";
+        refs.textarea.value = parsedSavedData.message || "";
+    
+          localStorage.setItem(KEY_TO_LOCALSTORAGE, JSON.stringify(parsedSavedData));
 }
